@@ -18,7 +18,7 @@ class CreateMainQuestionsTable extends Migration
             $table->unsignedBigInteger('exam_id');
             $table->foreign('exam_id')->references('id')->on('exams')->onDelete('cascade');
             $table->text('question');
-            $table->integer('order')->default(0);
+            $table->integer('order')->default(1);
             $table->text('notes')->nullable();
             $table->softDeletes();
             $table->timestamps();

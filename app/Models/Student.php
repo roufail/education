@@ -20,12 +20,24 @@ class Student extends Authenticatable implements MustVerifyEmail
         $image = request()->image->store('/','users');
         $this->attributes['image'] = $image;
     }
-    public function setPasswordAttribute($value) {
-        $this->attributes['password'] = bcrypt($value);
-    }
+    // public function setPasswordAttribute($value) {
+    //     $this->attributes['password'] = bcrypt($value);
+    // }
 
 
     public function sendEmailVerificationNotification() {
         $this->notify(new VerifyEmail);
+    }
+
+
+    public function results_questions()
+    {
+        return $this->hasMany(ResultQuestion::class);
+    }
+
+
+    public function results()
+    {
+        return $this->hasMany(Result::class);
     }
 }

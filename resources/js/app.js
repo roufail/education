@@ -4,18 +4,35 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+require("./bootstrap");
 import store from "./store/store";
 
-window.Vue = require('vue');
+window.Vue = require("vue");
 
-import { Form, HasError, AlertError } from 'vform'
-import Multiselect from 'vue-multiselect'
+import { Form, HasError, AlertError } from "vform";
+import Multiselect from "vue-multiselect";
+import Swal from "sweetalert2";
 
 window.Form = Form;
+window.Swal = Swal;
+
+// sweetalert
+const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000
+});
+
+// global toaster alert
+window.Toast = Toast;
+
 Vue.component(HasError.name, HasError);
 Vue.component(AlertError.name, AlertError);
-Vue.component('multiselect', Multiselect)
+Vue.component("multiselect", Multiselect);
+
+import pagination from "laravel-vue-pagination";
+Vue.component("pagination", pagination);
 
 /**
  * The following block of code may be used to automatically register your
@@ -28,7 +45,14 @@ Vue.component('multiselect', Multiselect)
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('exam-questions', require('./components/ExamQuestionsComponents.vue').default);
+Vue.component(
+    "exam-questions",
+    require("./components/ExamQuestionsComponents.vue").default
+);
+Vue.component(
+    "student-exam",
+    require("./components/StudentExamComponents.vue").default
+);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -37,6 +61,6 @@ Vue.component('exam-questions', require('./components/ExamQuestionsComponents.vu
  */
 
 const app = new Vue({
-    el: '#app',
-    store,
+    el: "#app",
+    store
 });

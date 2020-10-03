@@ -25,6 +25,7 @@ class MainQuestionRequest extends FormRequest
     {
         return [
             "question" => "required|string",
+            "notes"    => "nullable",
         ];
     }
 

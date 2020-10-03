@@ -17,18 +17,14 @@ class CreateQuestionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('exam_id');
             $table->foreign('exam_id')->references('id')->on('exams')->onDelete('cascade');
-
             $table->unsignedBigInteger('main_question_id');
             $table->foreign('main_question_id')->references('id')->on('main_questions')->onDelete('cascade');
-
-
-
             $table->text('question');
             $table->double('degree');
-            $table->integer('order')->default(0);
+            $table->integer('order')->default(1);
             $table->unsignedBigInteger('category_id');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->boolean('visible');
+            $table->boolean('visible')->default(1);
             $table->text('notes')->nullable();
             $table->softDeletes();
             $table->timestamps();

@@ -15,22 +15,20 @@ Route::get('/', function(){
     return view('admin.homepage');
 })->name('home');
 
-Route::resource('/students', 'StudentsController');
 
-
-
-Route::get('/exams/get-main-questions/{id}','ExamsController@get_main_questions');
-Route::post('/exams/add-main-question','ExamsController@add_main_question');
-
-Route::get('/exams/get-questions/{id}','ExamsController@get_questions');
-Route::post('/exams/add-question','ExamsController@add_question');
-Route::post('/exams/delete-question','ExamsController@delete_question');
-Route::post('/exams/update-question/{question}','ExamsController@update_question');
-Route::post('/exams/update-question-order','ExamsController@update_question_order');
-
-
-
-Route::resource('/exams', 'ExamsController');
-
-Route::get('/categories/list', 'CategoriesController@list');
-Route::resource('/categories', 'CategoriesController');
+    Route::group(['middleware' => 'auth:admins'],function(){
+            Route::resource('/students', 'StudentsController');
+            Route::get('/exams/get-main-questions/{id}','ExamsController@get_main_questions');
+            Route::post('/exams/add-main-question','ExamsController@add_main_question');
+            Route::get('/exams/get-questions/{id}','ExamsController@get_questions');
+            Route::post('/exams/add-question','ExamsController@add_question');
+            Route::post('/exams/delete-question','ExamsController@delete_question');
+            Route::post('/exams/delete-main-question','ExamsController@delete_main_question');
+            Route::post('/exams/update-question/{question}','ExamsController@update_question');
+            Route::post('/exams/update-question-order','ExamsController@update_question_order');
+            Route::post('/exams/update-main-question-order','ExamsController@update_main_question_order');
+            Route::post('/exams/update-main-question','ExamsController@update_main_question');
+            Route::resource('/exams', 'ExamsController');
+            Route::get('/categories/list', 'CategoriesController@list');
+            Route::resource('/categories', 'CategoriesController');
+    });

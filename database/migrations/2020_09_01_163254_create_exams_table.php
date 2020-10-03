@@ -17,11 +17,11 @@ class CreateExamsTable extends Migration
             $table->id();
             $table->string('title');
             $table->string('doctor');
-            $table->double('fullmark')->default(0);
             $table->integer('order')->default(0);
             $table->boolean('on')->default(1);
             $table->dateTime('started_at');
             $table->dateTime('ended_at');
+            $table->text('notes')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

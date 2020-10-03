@@ -13,4 +13,12 @@
     Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
 
-    Route::get('exam/{id}', 'ExamsController@exam');
+
+    Route::group(['middleware' => 'auth:students'],function(){
+        Route::get('profile', 'ExamsController@profile')->name("profile");
+        Route::get('get-exam/{id}', 'ExamsController@get_exam');
+        Route::post('save-answers', 'ExamsController@save_answers');
+        Route::post('get-answers', 'ExamsController@get_answers');
+        Route::get('exam/{id}', 'ExamsController@exam');
+        Route::post('end-exam', 'ExamsController@end_exam');
+    });

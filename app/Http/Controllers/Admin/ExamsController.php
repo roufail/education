@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Exam;
 use App\Models\Answer;
 use App\Models\Question;
+use App\Models\MainQuestion;
 
 use App\Http\Requests\Admin\Exams\ExamRequest;
 use App\Http\Requests\Admin\Exams\QuestionRequest;
@@ -17,6 +18,11 @@ use App\Http\Requests\Admin\Exams\MainQuestionRequest;
 
 class ExamsController extends Controller
 {
+
+    public function profile()
+    {
+       return 'profile';
+    }
     /**
      * Display a listing of the resource.
      *
@@ -164,7 +170,7 @@ class ExamsController extends Controller
           return response()->json(['error' => 'exam not found'], 500);
         }
         $question->delete();
-        return response()->json(['question_id' => $question->id], 200);
+        return response()->json(['question_id' => $question->id,'main_question_id' => $question->main_question_id], 200);
     }
 
     public function update_question(QuestionRequest $request,Question $question) {
@@ -192,6 +198,30 @@ class ExamsController extends Controller
         foreach ($request->questions as $question) {
             Question::where('id',$question['id'])->update(['order'=>$question['order']]);
         }
+    }
+
+
+
+    public function update_main_question_order(Request $request) {
+        foreach ($request->questions as $question) {
+            MainQuestion::where('id',$question['id'])->update(['order'=>$question['order']]);
+        }
+    }
+
+    public function update_main_question(MainQuestionRequest $request) {
+        $question = MainQuestion::find($request->id);
+        $question->update($request->validated());
+        return response()->json(['question' => $question->load('questions')], 200);
+    }
+
+
+    public function delete_main_question(Request $request) {
+        $question = MainQuestion::find($request->id);
+        if(!$question) {
+          return response()->json(['error' => 'Main question not found'], 500);
+        }
+        $question->delete();
+        return response()->json(['main_question_id' => $question->id], 200);
     }
 
 

@@ -18,4 +18,10 @@ class Exam extends Model
     {
         return $this->hasMany(MainQuestion::class);
     }
+
+    public function questions_answers()
+    {
+        return $this->hasMany(ResultQuestion::class);
+    }
+
 }

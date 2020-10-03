@@ -24,6 +24,7 @@ class CreateResultsTable extends Migration
             $table->double('percentage');
             $table->string('grade');
             $table->dateTime('result_date');
+            $table->boolean('ended')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
