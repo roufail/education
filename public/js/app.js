@@ -2637,6 +2637,68 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["id"],
@@ -2646,6 +2708,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       missed: [],
       q_saved: false,
       selected: [],
+      wrong: [],
+      right: [],
       questions_ids: [],
       page: 1,
       laravelData: {},
@@ -2689,6 +2753,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       })["catch"](function (error) {
         _this.ended = true;
         Toast.fire(error.response.data.message, "", "info");
+
+        _this.getExamResult();
       });
     },
     getAnswers: function getAnswers(questions_ids) {
@@ -2708,7 +2774,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       return this.$store.dispatch("exams/saveAnswers", {
         answers: this.selected,
-        id: this.id
+        id: this.id,
+        questions_ids: this.questions_ids
       }).then(function (response) {
         if (_this3.save) {
           Toast.fire("تم حفظ الاجابات", "", "info");
@@ -2729,10 +2796,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         id: this.id
       }).then(function (response) {
         Toast.fire("تم انهاء الامتحان", "", "info");
+
+        _this4.getExamResult();
+
         _this4.ended = true;
       })["catch"](function (error) {
         _this4.missed = error.response.data.data;
         Toast.fire(error.response.data.message, "", "error");
+      });
+    },
+    getExamResult: function getExamResult() {
+      var _this5 = this;
+
+      this.loading = true;
+      this.ended = true;
+      return this.$store.dispatch("exams/getExamResult", {
+        id: this.id,
+        result: true
+      }).then(function (response) {
+        _this5.selected = response.data.response.answers;
+        _this5.wrong = response.data.response.wrong;
+        _this5.right = response.data.response.right;
+        _this5.isLoading = false;
+      })["catch"](function (error) {
+        console.log(error);
       });
     },
     getParameterByName: function getParameterByName(name) {
@@ -2752,7 +2839,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     exam: "exams/getExam",
-    answers: "exams/getExam"
+    answers: "exams/getExam",
+    examResult: "exams/getExamResult"
   }))
 });
 
@@ -7209,7 +7297,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.rtl-list[data-v-18972356] {\n  direction: rtl;\n}\n.question[data-v-18972356] {\n  background-color: white;\n  border-radius: 5px;\n  /* border: 1px solid #ccc; */\n  box-shadow: 0px 0px 2px #ccc;\n}\n.loading[data-v-18972356] {\n  opacity: 0.5;\n}\n.missed[data-v-18972356] {\n  border: 1px solid red;\n}\n", ""]);
+exports.push([module.i, "\n.rtl-list[data-v-18972356] {\n  direction: rtl;\n}\n.question[data-v-18972356] {\n  background-color: white;\n  border-radius: 5px;\n  /* border: 1px solid #ccc; */\n  box-shadow: 0px 0px 2px #ccc;\n}\n.loading[data-v-18972356] {\n  opacity: 0.5;\n}\n.missed[data-v-18972356] {\n  border: 1px solid red;\n}\n.wrong[data-v-18972356] {\n  color: red;\n  font-weight: bold;\n}\n.right[data-v-18972356] {\n  color: green;\n  font-weight: bold;\n}\n.notes[data-v-18972356] {\n  background-color: #fbf3d2;\n  border-radius: 5px;\n  border: 1px solid #ffe783;\n  padding: 5px;\n}\n", ""]);
 
 // exports
 
@@ -50880,8 +50968,12 @@ var render = function() {
                                 _vm._v(
                                   "\n              " +
                                     _vm._s(subquestion.question) +
-                                    "\n              "
+                                    "("
                                 ),
+                                _c("b", [
+                                  _vm._v(_vm._s(subquestion.degree) + " درجة")
+                                ]),
+                                _vm._v(")\n              "),
                                 _c(
                                   "ul",
                                   { staticClass: "list-unstyled" },
@@ -50979,7 +51071,167 @@ var render = function() {
         ])
       : _vm._e(),
     _vm._v(" "),
-    _vm.ended ? _c("div", {}, [_vm._v("تم انهاء هذا الامتحان")]) : _vm._e()
+    _vm.ended
+      ? _c("div", {}, [
+          _vm._v("\n    تم انهاء هذا الامتحان\n\n    "),
+          _c("br"),
+          _vm._v(" "),
+          _vm.examResult && _vm.examResult.exam
+            ? _c("div", { class: { loading: _vm.isLoading } }, [
+                _vm._v(
+                  "\n      " +
+                    _vm._s(_vm.examResult.exam.result.fullmark) +
+                    " الدرجه الكليه\n      "
+                ),
+                _c("br"),
+                _vm._v(
+                  "\n      " +
+                    _vm._s(_vm.examResult.exam.result.degree) +
+                    " الدرجه الطالب\n      "
+                ),
+                _c("br"),
+                _vm._v(
+                  "\n      % " +
+                    _vm._s(_vm.examResult.exam.result.percentage) +
+                    " النسبه المئويه\n      "
+                ),
+                _c("br"),
+                _vm._v(
+                  "\n      " +
+                    _vm._s(_vm.examResult.exam.result.result_date) +
+                    " تاريخ انهاء الامتحان\n\n      "
+                ),
+                _c(
+                  "ul",
+                  { staticClass: "list-unstyled rtl-list" },
+                  _vm._l(_vm.examResult.exam.main_questions, function(
+                    question,
+                    mindex
+                  ) {
+                    return _c("li", { key: mindex }, [
+                      _vm._v(
+                        "\n          " +
+                          _vm._s(question.question) +
+                          " (" +
+                          _vm._s(question.notes) +
+                          ")\n          "
+                      ),
+                      _c(
+                        "ul",
+                        { staticClass: "list-unstyled" },
+                        _vm._l(question.questions, function(
+                          subquestion,
+                          sindex
+                        ) {
+                          return _c(
+                            "li",
+                            { key: sindex, staticClass: "question m-2 p-3" },
+                            [
+                              _vm._v(
+                                "\n              " +
+                                  _vm._s(subquestion.question) +
+                                  " ("
+                              ),
+                              _c("b", [
+                                _vm._v(_vm._s(subquestion.degree) + " درجة")
+                              ]),
+                              _vm._v(")\n              "),
+                              _c(
+                                "ul",
+                                { staticClass: "list-unstyled" },
+                                _vm._l(subquestion.answers, function(
+                                  answer,
+                                  aindex
+                                ) {
+                                  return _c("li", { key: aindex }, [
+                                    _c(
+                                      "label",
+                                      {
+                                        class: {
+                                          wrong:
+                                            _vm.wrong.indexOf(answer.id) >= 0,
+                                          right:
+                                            _vm.right.indexOf(answer.id) >= 0
+                                        }
+                                      },
+                                      [
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value:
+                                                _vm.selected[subquestion.id],
+                                              expression:
+                                                "selected[subquestion.id]"
+                                            }
+                                          ],
+                                          attrs: {
+                                            disabled: "disabled",
+                                            type: "radio",
+                                            name: "selected." + subquestion.id
+                                          },
+                                          domProps: {
+                                            value: answer.id,
+                                            checked: _vm._q(
+                                              _vm.selected[subquestion.id],
+                                              answer.id
+                                            )
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              return _vm.$set(
+                                                _vm.selected,
+                                                subquestion.id,
+                                                answer.id
+                                              )
+                                            }
+                                          }
+                                        }),
+                                        _vm._v(
+                                          "  " +
+                                            _vm._s(answer.answer) +
+                                            "\n\n                    "
+                                        ),
+                                        _vm.wrong.indexOf(answer.id) >= 0
+                                          ? _c("span", [
+                                              _vm._v("( الاجابه خاطئه )")
+                                            ])
+                                          : _vm._e(),
+                                        _vm.right.indexOf(answer.id) >= 0
+                                          ? _c("span", [
+                                              _vm._v("( الاجابه صحيحة )")
+                                            ])
+                                          : _vm._e()
+                                      ]
+                                    )
+                                  ])
+                                }),
+                                0
+                              ),
+                              _vm._v(" "),
+                              subquestion.notes
+                                ? _c("span", { staticClass: "notes" }, [
+                                    _vm._v(
+                                      "\n                " +
+                                        _vm._s(subquestion.notes) +
+                                        "\n              "
+                                    )
+                                  ])
+                                : _vm._e()
+                            ]
+                          )
+                        }),
+                        0
+                      )
+                    ])
+                  }),
+                  0
+                )
+              ])
+            : _vm._e()
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -67203,6 +67455,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   endExam: function endExam(params) {
     return _index__WEBPACK_IMPORTED_MODULE_0__["API"].post("/student/end-exam", params);
+  },
+  getExamResult: function getExamResult(params) {
+    return _index__WEBPACK_IMPORTED_MODULE_0__["API"].post("/student/get-exam-result/" + params.id, params);
   }
 });
 
@@ -67721,6 +67976,17 @@ __webpack_require__.r(__webpack_exports__);
         reject(error);
       });
     });
+  },
+  getExamResult: function getExamResult(_ref5, params) {
+    var commit = _ref5.commit;
+    return new Promise(function (resolve, reject) {
+      _api_exams__WEBPACK_IMPORTED_MODULE_0__["default"].getExamResult(params).then(function (response) {
+        commit("setExamResult", response.data.response);
+        resolve(response);
+      })["catch"](function (error) {
+        reject(error);
+      });
+    });
   }
 });
 
@@ -67741,6 +68007,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   getAnswers: function getAnswers(state) {
     return state.answers;
+  },
+  getExamResult: function getExamResult(state) {
+    return state.result;
   }
 });
 
@@ -67788,6 +68057,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   setAnswers: function setAnswers(state, answers) {
     state.answers = answers;
+  },
+  setExamResult: function setExamResult(state, result) {
+    state.result = result;
   }
 });
 
@@ -67804,7 +68076,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   exam: {},
-  answers: {}
+  answers: {},
+  result: {}
 });
 
 /***/ }),

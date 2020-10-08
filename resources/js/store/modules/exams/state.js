@@ -1,4 +1,5 @@
 export default {
     exam: {},
-    answers: {}
+    answers: {},
+    result: {}
 };

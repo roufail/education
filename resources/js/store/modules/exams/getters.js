@@ -4,5 +4,8 @@ export default {
     },
     getAnswers(state) {
         return state.answers;
+    },
+    getExamResult(state) {
+        return state.result;
     }
 };

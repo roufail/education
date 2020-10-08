@@ -24,4 +24,10 @@ class Exam extends Model
         return $this->hasMany(ResultQuestion::class);
     }
 
+    public function result()
+    {
+        return $this->hasOne(Result::class);
+    }
+
+
 }

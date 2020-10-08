@@ -10,61 +10,46 @@
         <div class="card-header">
             <h5 class="m-0">الامتحانات</h5>
 
-            <div class="card-tools float-left">
-                <a href="{{ route('admin.exams.create') }}"><i class="fa fa-plus"></i></a>
-            </div>
 
         </div>
         <div class="card-body">
-            @if ($exams->count() > 0)
+            @if ($results->count() > 0)
             <table class="table table-bordered">
                 <tbody>
                     <tr>
                         <th style="width: 10px">#</th>
                         <th>الامتحان</th>
-                        <th>الدكتور</th>
-                        <th>بدايه الامتحان</th>
-                        <th>نهايه الامتحان</th>
-                        <th>خيارات</th>
+                        <th>الطالب</th>
+                        <th>الدرجه النهائيه</th>
+                        <th>درجة الطالب</th>
+                        <th>النسبة المئوية</th>
+                        <th>الاجابات</th>
                     </tr>
-                    @foreach ($exams as $exam)
+                    @foreach ($results as $result)
                     <tr>
                         <td>
                             {{ $loop->iteration }}
                         </td>
                         <td>
-                            {{ $exam->title }}
+                            {{ $result->exam->title }}
                         </td>
 
                         <td>
-                            {{ $exam->doctor }}
+                            {{ $result->student->name }}
                         </td>
 
                         <td>
-                            {{ date('Y-m-d',strtotime($exam->started_at)) }}
+                            {{ $result->fullmark }}
                         </td>
 
                         <td>
-                            {{ date('Y-m-d',strtotime($exam->ended_at)) }}
+                            {{ $result->degree }}
                         </td>
                         <td>
-
-                            <div class="float-right">
-                                <a href="{{ route('admin.exams.edit',$exam->id) }}"><i
-                                        class="fa fa-edit"></i>&nbsp;تعديل</a>
-                            </div>
-
-                            <div class="float-right mr-3">
-                                <form style="display:inline-flex" method="post"
-                                    action="{{ route('admin.exams.destroy',$exam->id) }}">
-                                    @csrf
-                                    @method('delete')
-                                    <a class="delete-btn" href="javascript:;"><i class="fa fa-trash"></i>&nbsp;حذف</a>
-                                </form>
-                            </div>
-
-
-
+                            %{{ $result->percentage }}
+                        </td>
+                        <td>
+                            <a href="{{ route('admin.results.show',$result->id )}}">مشاهدة</a>
                         </td>
                     </tr>
                     @endforeach
@@ -72,7 +57,7 @@
 
             </table>
             @else
-            there is no exams
+            there is no results
             @endif
 
 
@@ -84,7 +69,7 @@
 
 
         <div class="card-footer clearfix">
-            {{ $exams->render('admin.layouts.components.pagination') }}
+            {{ $results->render('admin.layouts.components.pagination') }}
         </div>
 
     </div>

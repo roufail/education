@@ -12,6 +12,13 @@ use  App\Models\Result;
 use App\Http\Resources\Exams\ExamQuestionResource;
 class ExamsController extends Controller
 {
+
+    public function profile()
+    {
+       return 'profile';
+    }
+
+
     public function exam($id)
     {
         $exam = Exam::FindOrFail($id);
@@ -40,12 +47,12 @@ class ExamsController extends Controller
 
 
     public function get_answers(Request $request){
-        $answers = ResultQuestion::whereIn('question_id',$request->questions_ids)->where("student_id",auth("students")->user()->id)->pluck('answer_id','question_id');;
+        $answers = ResultQuestion::whereIn('question_id',$request->questions_ids)->where("student_id",auth("students")->user()->id)->pluck('answer_id','question_id');
         return $this->response(['answers' => $answers]);
     }
 
     public function save_answers(Request $request) {
-        ResultQuestion::whereIn('answer_id',$request->answers)->where("student_id",auth("students")->user()->id)->delete();
+        ResultQuestion::whereIn('question_id',$request->questions_ids)->where("student_id",auth("students")->user()->id)->delete();
         $answers_db = Answer::join('questions','answers.question_id','questions.id')->whereIn('answers.id',$request->answers)->get(['questions.id as question_id','answers.id as answer_id','exam_id','right','degree'])->toArray();
         auth()->user()->results_questions()->createMany($answers_db);
 
@@ -86,8 +93,35 @@ class ExamsController extends Controller
 
                     ]
             );
+
             return $this->response($unanswered,'تم انهاء الامتحان');
         }
+    }
+
+
+    public function get_exam_result(Request $request){
+
+        $exam = Exam::with(['result','main_questions.questions.result','main_questions.questions.answers'])->FindOrFail($request->id);
+
+        if(!$exam) {
+            return $this->response([],'نتيجه الامتحان');
+        }
+
+        $answers = ResultQuestion::where('exam_id',$exam->id)->where("student_id",auth("students")->user()->id)->get();
+
+        $wrong = $answers->filter(function($answer){
+            return !$answer->right;
+        })->pluck('answer_id');
+
+
+        $right = $answers->filter(function($answer){
+            return $answer->right;
+        })->pluck('answer_id');
+
+
+        $answers = $answers->pluck('answer_id','question_id');
+
+        return $this->response(["exam" =>  new ExamQuestionResource($exam),'answers' => $answers,'wrong' => $wrong,'right' => $right],'نتيجه الامتحان');
     }
 
 }

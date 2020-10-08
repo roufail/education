@@ -31,4 +31,7 @@ Route::get('/', function(){
             Route::resource('/exams', 'ExamsController');
             Route::get('/categories/list', 'CategoriesController@list');
             Route::resource('/categories', 'CategoriesController');
+
+            Route::resource('/courses', 'CoursesController');
+            Route::resource('/results', 'ResultsController');
     });

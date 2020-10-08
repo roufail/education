@@ -14,13 +14,20 @@ class ExamQuestionResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $array =  [
             'id'  => $this->id,
             'title'  => $this->title,
             'doctor' => $this->doctor,
             'started_at' => $this->started_at,
             'ended_at' => $this->ended_at,
-            'main_questions' => new MainQuestionsCollection($this->main_questions()->paginate(1))
+            'result' => $this->when(request()->result , $this->result)
         ];
+
+        if(request()->result){
+            $array['main_questions'] = $this->when(request()->result , MainQuestionsResource::collection($this->main_questions));
+        }else {
+            $array['main_questions'] = $this->when(!request()->result ,new MainQuestionsCollection($this->main_questions()->paginate(1)));
+        }
+        return $array;
     }
 }

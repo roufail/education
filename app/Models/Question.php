@@ -16,4 +16,9 @@ class Question extends Model
         return $this->hasMany(Answer::class);
     }
 
+    public function result()
+    {
+        return $this->HasOne(ResultQuestion::class);
+    }
+
 }

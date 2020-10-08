@@ -18,7 +18,7 @@
                 v-for="(subquestion, sindex) in question.questions"
                 :key="sindex"
               >
-                {{ subquestion.question }}
+                {{ subquestion.question }}(<b>{{ subquestion.degree }} درجة</b>)
                 <ul class="list-unstyled">
                   <li
                     v-for="(answer, aindex) in subquestion.answers"
@@ -61,7 +61,69 @@
         </div>
       </div>
     </div>
-    <div class="" v-if="ended">تم انهاء هذا الامتحان</div>
+    <div class="" v-if="ended">
+      تم انهاء هذا الامتحان
+
+      <br />
+
+      <div :class="{ loading: isLoading }" v-if="examResult && examResult.exam">
+        {{ examResult.exam.result.fullmark }} الدرجه الكليه
+        <br />
+        {{ examResult.exam.result.degree }} الدرجه الطالب
+        <br />
+        % {{ examResult.exam.result.percentage }} النسبه المئويه
+        <br />
+        {{ examResult.exam.result.result_date }} تاريخ انهاء الامتحان
+
+        <ul class="list-unstyled rtl-list">
+          <li
+            v-for="(question, mindex) in examResult.exam.main_questions"
+            :key="mindex"
+          >
+            {{ question.question }} ({{ question.notes }})
+            <ul class="list-unstyled">
+              <li
+                class="question m-2 p-3"
+                v-for="(subquestion, sindex) in question.questions"
+                :key="sindex"
+              >
+                {{ subquestion.question }} (<b>{{ subquestion.degree }} درجة</b
+                >)
+                <ul class="list-unstyled">
+                  <li
+                    v-for="(answer, aindex) in subquestion.answers"
+                    :key="aindex"
+                  >
+                    <label
+                      :class="{
+                        wrong: wrong.indexOf(answer.id) >= 0,
+                        right: right.indexOf(answer.id) >= 0,
+                      }"
+                      ><input
+                        disabled="disabled"
+                        type="radio"
+                        :value="answer.id"
+                        v-model="selected[subquestion.id]"
+                        :name="'selected.' + subquestion.id"
+                      />&nbsp;&nbsp;{{ answer.answer }}
+
+                      <span v-if="wrong.indexOf(answer.id) >= 0"
+                        >( الاجابه خاطئه )</span
+                      ><span v-if="right.indexOf(answer.id) >= 0"
+                        >( الاجابه صحيحة )</span
+                      >
+                    </label>
+                  </li>
+                </ul>
+                <span class="notes" v-if="subquestion.notes">
+                  {{ subquestion.notes }}
+                </span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -76,6 +138,8 @@ export default {
       missed: [],
       q_saved: false,
       selected: [],
+      wrong: [],
+      right: [],
       questions_ids: [],
       page: 1,
       laravelData: {},
@@ -118,6 +182,7 @@ export default {
         .catch((error) => {
           this.ended = true;
           Toast.fire(error.response.data.message, "", "info");
+          this.getExamResult();
         });
     },
     getAnswers(questions_ids) {
@@ -138,6 +203,7 @@ export default {
         .dispatch("exams/saveAnswers", {
           answers: this.selected,
           id: this.id,
+          questions_ids: this.questions_ids,
         })
         .then((response) => {
           if (this.save) {
@@ -159,11 +225,30 @@ export default {
         })
         .then((response) => {
           Toast.fire("تم انهاء الامتحان", "", "info");
+          this.getExamResult();
           this.ended = true;
         })
         .catch((error) => {
           this.missed = error.response.data.data;
           Toast.fire(error.response.data.message, "", "error");
+        });
+    },
+    getExamResult() {
+      this.loading = true;
+      this.ended = true;
+      return this.$store
+        .dispatch("exams/getExamResult", {
+          id: this.id,
+          result: true,
+        })
+        .then((response) => {
+          this.selected = response.data.response.answers;
+          this.wrong = response.data.response.wrong;
+          this.right = response.data.response.right;
+          this.isLoading = false;
+        })
+        .catch((error) => {
+          console.log(error);
         });
     },
     getParameterByName(name, url = null) {
@@ -187,6 +272,7 @@ export default {
     ...mapGetters({
       exam: "exams/getExam",
       answers: "exams/getExam",
+      examResult: "exams/getExamResult",
     }),
   },
 };
@@ -207,5 +293,21 @@ export default {
 }
 .missed {
   border: 1px solid red;
+}
+.wrong {
+  color: red;
+  font-weight: bold;
+}
+
+.right {
+  color: green;
+  font-weight: bold;
+}
+
+.notes {
+  background-color: #fbf3d2;
+  border-radius: 5px;
+  border: 1px solid #ffe783;
+  padding: 5px;
 }
 </style>

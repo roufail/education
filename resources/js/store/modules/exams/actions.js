@@ -52,5 +52,19 @@ export default {
                     reject(error);
                 });
         });
+    },
+
+    getExamResult({ commit }, params) {
+        return new Promise((resolve, reject) => {
+            exams
+                .getExamResult(params)
+                .then(response => {
+                    commit("setExamResult", response.data.response);
+                    resolve(response);
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
     }
 };

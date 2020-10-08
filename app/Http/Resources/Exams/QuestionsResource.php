@@ -17,6 +17,8 @@ class QuestionsResource extends JsonResource
         return [
             'id'       => $this->id,
             'question' => $this->question,
+            'notes'    => $this->notes,
+            'degree'    => $this->degree,
             'answers'  => AnswersResource::collection($this->answers),
         ];
     }
