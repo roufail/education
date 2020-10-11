@@ -26,12 +26,18 @@ class CourseRequest extends FormRequest
         $rules = [
             'title'       => 'required|unique:courses,title',
             'description' => 'nullable',
-            'exam_id'     => 'nullable|exists:exams,id'
+            'exam_id'     => 'nullable|exists:exams,id',
+            'image'            => 'required|mimes:jpeg,jpg,png|max:512',
+
         ];
 
 
         if($this->course){
             $rules['title']            =  'nullable|unique:courses,title,'.$this->course->id;
+
+            if($this->course->image != '') {
+                $rules['image'] = "nullable|mimes:jpeg,jpg,png|max:512";
+            }
         }
 
         return $rules;
@@ -44,6 +50,10 @@ class CourseRequest extends FormRequest
             'title.required' => 'حقل العنوان مطلوب',
             'title.unique'   => 'حقل العنوان موجود مسبقاً',
             'exam_id.exists'   => 'حقل الامتحان غير صالح',
+            'image.required'         => 'الصوره مطلوبه',
+            'image.mimes'            => 'صوره غير صالحه',
+            'image.max'              => 'حجم الصوره يجب ان لا يتجاوز :max كيلو',
+
         ];
     }
 }

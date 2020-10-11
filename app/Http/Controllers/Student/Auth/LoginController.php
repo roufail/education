@@ -35,7 +35,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->redirectTo = route('student.profile');
+        $this->redirectTo = route('student.home');
         $this->middleware('guest:students')->except('logout');
     }
 

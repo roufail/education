@@ -22,6 +22,7 @@
                     <tr>
                         <th style="width: 10px">#</th>
                         <th>الكورس</th>
+                        <th>الصوره</th>
                         <th>خيارات</th>
                     </tr>
                     @foreach ($courses as $course)
@@ -32,7 +33,9 @@
                         <td>
                             {{ $course->title }}
                         </td>
-
+                        <td>
+                            <img height="150px" width="150px" src="{{ Storage::disk('courses')->url($course->image) }}">
+                        </td>
                         <td>
 
                             <div class="float-right">

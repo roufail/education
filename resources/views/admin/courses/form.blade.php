@@ -4,7 +4,7 @@
 @endpush
 @section('content')
 <div class="col-md-12">
-    @include('admin.layouts.components.alerts')
+    {{-- @include('admin.layouts.components.alerts') --}}
 
 
     <form role="form" enctype="multipart/form-data"
@@ -58,6 +58,21 @@
 
             </div><!-- form row -->
 
+
+            <div class="form-group col-md-9">
+                <label for="exampleInputFile">الصوره</label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" name="image" class="custom-file-input  @error('image') is-invalid @enderror"
+                            id="exampleInputFile">
+                        <label class="custom-file-label" for="exampleInputFile">اختار صوره</label>
+                    </div>
+                </div>
+                @error('image')
+                <small class="text-danger">{{ $message }}</small>
+                @enderror
+
+            </div>
 
 
         </div>

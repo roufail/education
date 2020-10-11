@@ -40,7 +40,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest:students');
-        $this->redirectTo = route('student.profile');
+        $this->redirectTo = route('student.home');
     }
 
     /**

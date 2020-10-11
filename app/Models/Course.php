@@ -9,5 +9,17 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title','description','exam_id'];
+    protected $fillable = ['title','description','image','exam_id'];
+
+    public function exam()
+    {
+        return $this->belongsTo(Exam::class);
+    }
+
+
+    public function setImageAttribute($value) {
+        $image = request()->image->store('/','courses');
+        $this->attributes['image'] = $image;
+    }
+
 }

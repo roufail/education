@@ -84,12 +84,12 @@ class VerificationController extends Controller
         }
 
         if ($response = $this->verified($request)) {
-           return redirect(route('student.profile'))->with('verified', true);
+           return redirect(route('student.home'))->with('verified', true);
         }
 
         return $request->wantsJson()
                     ? new Response('', 204)
-                    : redirect(route('student.profile'))->with('verified', true);
+                    : redirect(route('student.home'))->with('verified', true);
     }
 
     /**

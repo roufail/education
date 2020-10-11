@@ -1,5 +1,5 @@
-@extends('layouts.app')
-
+@extends('layouts.master')
+@section('title','Student login')
 @section('content')
 <div class="container" style="direction:rtl;text-align:right;">
     <div class="row justify-content-center">

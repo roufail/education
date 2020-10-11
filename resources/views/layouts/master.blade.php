@@ -7,8 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"
-        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/students/main.css') }}">
 
     @stack('extra-css')
     <title>@yield('title')</title>
@@ -18,29 +19,39 @@
     <div class="container">
 
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-                    <a class="nav-link" href="#">Features</a>
-                    <a class="nav-link" href="#">Pricing</a>
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </div>
+        <div class="main-nav row">
+            <ul class="nav justify-content-start col-6 col-md-9 col-lg-10">
+                <li class="nav-item @if(Route::is('student.home')) active @endif">
+                    <a class="nav-link" href="{{  route('student.home')  }}">الكورسات</a>
+                </li>
+                @if(!auth('students')->check())
+                <li class="nav-item @if(Route::is('student.login')) active @endif">
+                    <a class="nav-link" href="{{  route('student.login')  }}">دخول</a>
+                </li>
+                <li class="nav-item @if(Route::is('student.register')) active @endif">
+                    <a class="nav-link" href="{{  route('student.register')  }}">تسجيل</a>
+                </li> @else
+                <li class="nav-item">
+                    <a class="nav-link" href="#">كورساتي</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('student.logout') }}">تسجيل الخروج</a>
+                </li>
+                @endif
+            </ul>
+
+            <div class="search col-6 col-md-3 col-lg-2">
+                <form action="{{ route('student.home') }}">
+                    <div class="form-group">
+                        <input name="s" value="{{ request()->s }}" type="text" class="form-control search-input"
+                            placeholder="البحث ..." />
+                        <i class="icon fa fa-search"></i>
+                    </div>
+                </form>
             </div>
-        </nav>
-
-
-        <div class="row justify-content-md-center text-right p-3">
-            <div class="col-md-auto">
-
-                @yield('content')
-
-            </div>
+        </div>
+        <div class="row text-right pt-3  clearfix">
+            @yield('content')
         </div>
     </div>
     <!-- Optional JavaScript -->
