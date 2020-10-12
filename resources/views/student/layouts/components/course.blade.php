@@ -8,6 +8,14 @@
                         <li class="list-group-item"><i class="fa fa-users"></i>&nbsp; 1200</li>
                     </ul>
         </a>
+
+        <div class="hover">
+            {{ excerpt($course->description,2) }}
+            <br />
+            <a href="{{ route('student.course',$course->id) }}">المزيد</a>
+        </div>
+
     </div>
+
 
 </div>

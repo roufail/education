@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="exam && !ended">
-      {{ exam.title }} ({{ exam.doctor }})
+      {{ exam.title }}
       {{ exam.notes ? '"' + exam.notes + '"' : "" }}
 
       <div :class="{ loading: isLoading }" v-if="exam.main_questions">
@@ -56,7 +56,7 @@
           </button>
 
           <button class="btn btn-large btn-primary" @click="endExam()">
-            انهاء الامتحان
+            تسليم الاجابات
           </button>
         </div>
       </div>
@@ -214,24 +214,56 @@ export default {
         .catch((error) => {});
     },
     endExam() {
-      if (this.missed.length > 0 && !this.q_saved) {
-        Toast.fire("قم بحفظ الامتحان اولاً", "", "ُerror");
-        return false;
-      }
+    //   if (this.missed.length > 0 && !this.q_saved) {
+    //     Toast.fire("قم بحفظ الامتحان اولاً", "", "ُerror");
+    //     return false;
+    //   }
       this.q_saved = true;
-      this.$store
-        .dispatch("exams/endExam", {
-          id: this.id,
-        })
-        .then((response) => {
-          Toast.fire("تم انهاء الامتحان", "", "info");
-          this.getExamResult();
-          this.ended = true;
-        })
-        .catch((error) => {
-          this.missed = error.response.data.data;
-          Toast.fire(error.response.data.message, "", "error");
-        });
+
+    let $this = this;
+    $this.saveAnswers().then(function(){
+
+
+            Swal.fire({
+                title: 'هل انت متأكد ؟',
+                text: "لايمكنك التراجع عن هذا الاجراء.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'نعم',
+                cancelButtonText: 'تراجع'
+                }).then((result) => {
+                if (result.value) {
+
+
+                        $this.$store
+                        .dispatch("exams/endExam", {
+                        id: $this.id,
+                        })
+                        .then((response) => {
+                        Toast.fire("تم انهاء الامتحان", "", "info");
+                        $this.getExamResult();
+                        $this.ended = true;
+                        })
+                        .catch((error) => {
+                        $this.missed = error.response.data.data;
+                        Toast.fire(error.response.data.message, "", "error");
+                        });
+
+
+
+
+                }
+                })
+
+
+
+});
+
+
+
+
     },
     getExamResult() {
       this.loading = true;

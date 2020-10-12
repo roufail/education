@@ -15,6 +15,9 @@
 
     Route::get('/', 'HomeController@home')->name('home');
 
+    // courses
+    Route::get('course/{course}', 'HomeController@get_course')->name('course');
+
     Route::group(['middleware' => 'auth:students'],function(){
         Route::get('profile', 'ExamsController@profile')->name("profile");
         Route::get('get-exam/{id}', 'ExamsController@get_exam');
@@ -25,8 +28,5 @@
         Route::get('exam/{id}', 'ExamsController@exam')->name('exam');
         Route::post('end-exam', 'ExamsController@end_exam');
 
-
-        // courses
-        Route::get('course/{course}', 'HomeController@get_course')->name('course');
 
     });

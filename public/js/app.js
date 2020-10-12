@@ -2784,29 +2784,40 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       })["catch"](function (error) {});
     },
     endExam: function endExam() {
-      var _this4 = this;
-
-      if (this.missed.length > 0 && !this.q_saved) {
-        Toast.fire("قم بحفظ الامتحان اولاً", "", "ُerror");
-        return false;
-      }
-
+      //   if (this.missed.length > 0 && !this.q_saved) {
+      //     Toast.fire("قم بحفظ الامتحان اولاً", "", "ُerror");
+      //     return false;
+      //   }
       this.q_saved = true;
-      this.$store.dispatch("exams/endExam", {
-        id: this.id
-      }).then(function (response) {
-        Toast.fire("تم انهاء الامتحان", "", "info");
-
-        _this4.getExamResult();
-
-        _this4.ended = true;
-      })["catch"](function (error) {
-        _this4.missed = error.response.data.data;
-        Toast.fire(error.response.data.message, "", "error");
+      var $this = this;
+      $this.saveAnswers().then(function () {
+        Swal.fire({
+          title: 'هل انت متأكد ؟',
+          text: "لايمكنك التراجع عن هذا الاجراء.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'نعم',
+          cancelButtonText: 'تراجع'
+        }).then(function (result) {
+          if (result.value) {
+            $this.$store.dispatch("exams/endExam", {
+              id: $this.id
+            }).then(function (response) {
+              Toast.fire("تم انهاء الامتحان", "", "info");
+              $this.getExamResult();
+              $this.ended = true;
+            })["catch"](function (error) {
+              $this.missed = error.response.data.data;
+              Toast.fire(error.response.data.message, "", "error");
+            });
+          }
+        });
       });
     },
     getExamResult: function getExamResult() {
-      var _this5 = this;
+      var _this4 = this;
 
       this.loading = true;
       this.ended = true;
@@ -2814,10 +2825,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         id: this.id,
         result: true
       }).then(function (response) {
-        _this5.selected = response.data.response.answers;
-        _this5.wrong = response.data.response.wrong;
-        _this5.right = response.data.response.right;
-        _this5.isLoading = false;
+        _this4.selected = response.data.response.answers;
+        _this4.wrong = response.data.response.wrong;
+        _this4.right = response.data.response.right;
+        _this4.isLoading = false;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -50921,9 +50932,7 @@ var render = function() {
           _vm._v(
             "\n    " +
               _vm._s(_vm.exam.title) +
-              " (" +
-              _vm._s(_vm.exam.doctor) +
-              ")\n    " +
+              "\n    " +
               _vm._s(_vm.exam.notes ? '"' + _vm.exam.notes + '"' : "") +
               "\n\n    "
           ),
@@ -51061,7 +51070,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v("\n          انهاء الامتحان\n        ")]
+                      [_vm._v("\n          تسليم الاجابات\n        ")]
                     )
                   ])
                 ],
