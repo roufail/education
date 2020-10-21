@@ -42,7 +42,6 @@
               </div>
               <table class="table table-bordered">
                 <thead>
-                  <tr>
                     <th>الترتيب</th>
                     <th>السؤال</th>
                     <th>الدرجة</th>
@@ -53,7 +52,6 @@
                         class="fa fa-plus"
                       ></i>
                     </th>
-                  </tr>
                 </thead>
 
                 <draggable
@@ -619,7 +617,7 @@ export default {
         .catch((error) => {});
     },
 
-    changeMainQuestionsOrder(mindex) {
+    changeMainQuestionsOrder() {
       this.AllMainQuestions.map((question, index) => {
         this.$store.commit("questions/updateMainQuestionOrder", {
           question,

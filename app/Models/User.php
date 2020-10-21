@@ -39,6 +39,8 @@ class User extends Authenticatable
 
 
 
+
+
     public function setImageAttribute($value) {
         $image = request()->image->store('/','users');
         $this->attributes['image'] = $image;

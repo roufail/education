@@ -27,8 +27,7 @@ class CourseRequest extends FormRequest
             'title'       => 'required|unique:courses,title',
             'description' => 'nullable',
             'exam_id'     => 'nullable|exists:exams,id',
-            'image'            => 'required|mimes:jpeg,jpg,png|max:512',
-
+            'image'       => 'required|mimes:jpeg,jpg,png|max:512',
         ];
 
 

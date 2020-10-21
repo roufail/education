@@ -53,7 +53,10 @@ class ExamsController extends Controller
      */
     public function store(ExamRequest $request)
     {
-        if($exam = Exam::create($request->validated())) {
+
+        $exam_ar = $request->validated();
+        $exam_ar['on'] = $request->get('on', false);
+        if($exam = Exam::create($exam_ar)) {
             return redirect()->route('admin.exams.edit',$exam->id)->with(['success' => ' تم اضافه الامتحان  بنجاح']);
         }
         return redirect()->back()->withErrors(['error' => 'حدث خطأ ما يرجي اعاده المحاوله لاحقاً']);
@@ -80,9 +83,14 @@ class ExamsController extends Controller
      */
     public function update(ExamRequest $request, Exam $exam)
     {
-        if($exam->update($request->validated())) {
+
+        $exam_ar = $request->validated();
+        $exam_ar['on'] = $request->get('on', false);
+
+        if($exam->update($exam_ar)) {
             return redirect()->route('admin.exams.edit',$exam->id)->with(['success' => ' تم تعديل الامتحان  بنجاح']);
         }
+
         return redirect()->back()->withErrors(['error' => 'حدث خطأ ما يرجي اعاده المحاوله لاحقاً']);
     }
 
@@ -177,6 +185,8 @@ class ExamsController extends Controller
         if(!$question) {
           return response()->json(['error' => 'question not found'], 500);
         }
+
+        $request->merge(['visible'=>$request->visible ? 1 : 0]);
         $question->update($request->validated());
 
 

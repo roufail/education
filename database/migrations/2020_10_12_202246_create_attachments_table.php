@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExamsTable extends Migration
+class CreateAttachmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,17 @@ class CreateExamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('exams', function (Blueprint $table) {
+        Schema::create('attachments', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('doctor');
+            $table->string('link');
+            $table->string('type');
+            $table->string('lecture');
             $table->integer('order')->default(0);
-            $table->boolean('on')->default(1);
-            $table->dateTime('started_at');
-            $table->dateTime('ended_at');
-            $table->text('notes')->nullable();
-            $table->unsignedBigInteger('course_id')->nullable();
+            $table->unsignedBigInteger('course_id');
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
+            $table->unsignedBigInteger('lecture_id');
+            $table->foreign('lecture_id')->references('id')->on('lectures')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -36,6 +36,6 @@ class CreateExamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exams');
+        Schema::dropIfExists('course_attachments');
     }
 }

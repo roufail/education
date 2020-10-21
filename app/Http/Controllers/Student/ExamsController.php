@@ -22,6 +22,9 @@ class ExamsController extends Controller
     public function exam($id)
     {
         $exam = Exam::FindOrFail($id);
+        if(!$exam->on){
+            abort(404);
+        }
         return view('student.exams.exam',compact('exam'));
     }
 
@@ -35,6 +38,8 @@ class ExamsController extends Controller
         $exam = Exam::with(['main_questions' => function($main_questions){
             $main_questions->wherehas('questions')->with('questions.answers')->paginate(1);
         }])->FindOrFail($id);
+
+
 
 
 

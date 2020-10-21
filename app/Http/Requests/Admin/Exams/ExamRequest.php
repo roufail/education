@@ -29,6 +29,7 @@ class ExamRequest extends FormRequest
             'doctor'            => 'required|min:3',
             'started_at'        => 'required|date',
             'ended_at'          => 'required|date|after_or_equal:started_at',
+            'on'                => 'nullable|boolean'
         ];
         return $rules;
     }

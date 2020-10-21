@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Exam extends Model
 {
     protected $fillable = [
-        'title', 'doctor', 'started_at','ended_at'
+        'title', 'doctor', 'started_at','ended_at','on'
     ];
 
     public function questions()
@@ -16,7 +16,7 @@ class Exam extends Model
     }
     public function main_questions()
     {
-        return $this->hasMany(MainQuestion::class);
+        return $this->hasMany(MainQuestion::class)->orderBy('order','asc');
     }
 
     public function questions_answers()

@@ -8,7 +8,7 @@
 
 
 @section('content')
-<div id="app">
+<div id="app" class="col-12">
     <student-exam :id="{{ $exam->id }}"></student-exam>
 </div>
 

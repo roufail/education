@@ -63,5 +63,6 @@ export default {
             .map(newquestion => newquestion.id)
             .indexOf(question.main_question_id);
         state.mainQuestions.splice(index, 1);
-    }
+    },
+
 };

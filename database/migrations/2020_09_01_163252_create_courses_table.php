@@ -18,8 +18,7 @@ class CreateCoursesTable extends Migration
             $table->string('title');
             $table->string('image');
             $table->text('description')->nullable();
-            $table->unsignedBigInteger('exam_id')->nullable();
-            $table->foreign('exam_id')->references('id')->on('exams')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

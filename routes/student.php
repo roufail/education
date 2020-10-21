@@ -29,4 +29,9 @@
         Route::post('end-exam', 'ExamsController@end_exam');
 
 
+        Route::get('course/{course}/enroll', 'HomeController@course_enroll')->name('course.enroll');
+
+        Route::get('my-courses', 'HomeController@my_courses')->name('mycourses');
+
+        Route::get('course/{course}/lecture/{lecture}', 'HomeController@get_lecture')->name('course.lecture');
     });

@@ -28,7 +28,8 @@ class QuestionRequest extends FormRequest
             "degree"   => "required|numeric",
             "answers"  => "required|array",
             "answers.*.answer" => "required|string",
-            "category_id" => "required|exists:categories,id"
+            "category_id" => "required|exists:categories,id",
+            'visible'     => 'nullable'
         ];
     }
 

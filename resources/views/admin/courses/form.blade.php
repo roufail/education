@@ -83,5 +83,17 @@
         </div>
     </form>
 
+
+    @if($course->id)
+    <div id="app">
+        <course-content :id="{{ $course->id }}"></course-content>
+    </div>
+    @endif
+
 </div>
 @endsection
+
+
+@push('extra-js')
+<script src="{{ asset('js/app.js') }}"></script>
+@endpush

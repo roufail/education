@@ -25,6 +25,11 @@ class Student extends Authenticatable implements MustVerifyEmail
     // }
 
 
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class);
+    }
+
     public function sendEmailVerificationNotification() {
         $this->notify(new VerifyEmail);
     }

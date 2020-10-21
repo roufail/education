@@ -18,7 +18,9 @@ class MainQuestionsResource extends JsonResource
             'id'        => $this->id,
             'question'  => $this->question,
             'notes'     => $this->notes,
-            'questions' => QuestionsResource::collection($this->questions->load('answers'))
+            'questions' => QuestionsResource::collection($this->questions->filter(function($quest){
+                return $quest->visible;
+            })->sortBy('order')->load('answers'))
         ];
     }
 }

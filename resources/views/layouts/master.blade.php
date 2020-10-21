@@ -31,8 +31,8 @@
                 <li class="nav-item @if(Route::is('student.register')) active @endif">
                     <a class="nav-link" href="{{  route('student.register')  }}">تسجيل</a>
                 </li> @else
-                <li class="nav-item">
-                    <a class="nav-link" href="#">كورساتي</a>
+                <li class="nav-item @if(Route::is('student.mycourses')) active @endif">
+                    <a class="nav-link" href="{{ route('student.mycourses') }}">كورساتي</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('student.logout') }}">تسجيل الخروج</a>

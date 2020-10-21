@@ -54,6 +54,12 @@ Vue.component(
     require("./components/StudentExamComponents.vue").default
 );
 
+Vue.component(
+    "course-content",
+    require("./components/CourseContentComponent.vue").default
+);
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
