@@ -1,7 +1,21 @@
 @extends('admin.layouts.master')
 @push('extra-css')
 <link rel="stylesheet" href="{{ asset('css/datetimepicker.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}">
 @endpush
+
+
+@section('extra-styles')
+<style type="text/css">
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        text-align: right;
+        float: right;
+        color: white;
+    }
+</style>
+@endsection
+
+
 @section('content')
 <div class="col-md-12">
     {{-- @include('admin.layouts.components.alerts') --}}
@@ -42,10 +56,11 @@
                     <label for="exam_id">الامتحان</label>
 
 
-                    <select name="exam_id" class="form-control">
+                    <select multiple name="exams[]" class="form-control select2">
                         <option value="">------</option>
                         @foreach ($exams as $id => $exam)
-                        <option value="{{ $id }}" @if($id==$course->exam_id) selected="selected" @endif>{{ $exam }}
+                        <option value="{{ $id }}" @if(in_array($id,$course->exams->pluck('id')->toArray()))
+                            selected="selected" @endif>{{ $exam }}
                         </option>
                         @endforeach
                     </select>
@@ -55,7 +70,7 @@
                     <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
-
+                <span><a href="{{ route('admin.exams.create') }}">اضافه امتحان جديد</a></span>
             </div><!-- form row -->
 
 
@@ -93,7 +108,14 @@
 </div>
 @endsection
 
-
+@section('extra-scripts')
+<script>
+    jQuery(function($){
+        $('.select2').select2();
+    });
+</script>
+@endsection
 @push('extra-js')
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/select2.full.min.js') }}"></script>
 @endpush

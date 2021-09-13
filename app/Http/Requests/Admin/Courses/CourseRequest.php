@@ -26,7 +26,8 @@ class CourseRequest extends FormRequest
         $rules = [
             'title'       => 'required|unique:courses,title',
             'description' => 'nullable',
-            'exam_id'     => 'nullable|exists:exams,id',
+            'exams'        => 'nullable|array',
+            'exams.*'      => 'exists:exams,id',
             'image'       => 'required|mimes:jpeg,jpg,png|max:512',
         ];
 

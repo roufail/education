@@ -46,7 +46,8 @@ class CoursesController extends Controller
     {
 
         $request->merge(['on' => $request->on ? 1 : 0]);
-        if(Course::create($request->validated())) {
+        if($course = Course::create($request->validated())) {
+            Exam::whereIn('id',$request->exams)->update(['course_id' => $course->id]);
             return redirect()->route('admin.courses.index')->with(['success' => ' تم اضافه الكورس  بنجاح']);
         }
         return redirect()->back()->withErrors(['error' => 'حدث خطأ ما يرجي اعاده المحاوله لاحقاً']);
@@ -75,6 +76,7 @@ class CoursesController extends Controller
     public function update(CourseRequest $request,Course $course)
     {
         if($course->update($request->validated())) {
+            Exam::whereIn('id',$request->exams)->update(['course_id' => $course->id]);
             return redirect()->route('admin.courses.index')->with(['success' => ' تم تعديل الكورس  بنجاح']);
         }
         return redirect()->back()->withErrors(['error' => 'حدث خطأ ما يرجي اعاده المحاوله لاحقاً']);
@@ -88,6 +90,7 @@ class CoursesController extends Controller
      */
     public function destroy(Course $course)
     {
+        $course->exams()->deatch();
         if($course->delete()) {
             return redirect()->back()->with(['success' => ' تم حذف الكورس بنجاح']);
         }

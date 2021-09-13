@@ -20,7 +20,6 @@ class HomeController extends Controller
 
     public function get_course(Course $course){
         $enrolled = false;
-
         if(auth('students')->check()) {
          $enrolled = auth('students')->user()->courses->contains($course);
         }
@@ -55,10 +54,14 @@ class HomeController extends Controller
 
 
     public function get_lecture(Course $course,Lecture $lecture){
+
         if($course->lectures->contains($lecture) && auth('students')->user()->courses->contains($course)){
-            $lecture->load('attachments',function($attach){
+
+
+            $lecture->load(['attachments' => function($attach){
                     $attach->orderby('order');
-            });
+            }]);
+
             return view('student.frontend.lecture',compact('lecture'));
         }else {
             abort(404);
